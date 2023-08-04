@@ -113,10 +113,11 @@ def find_closest_files(target_datetime, file_list, use_filename=True, number_of_
                 time_diffs_header.append((time_diff, filename))
         closest_files_header = sorted(time_diffs_header, key=lambda x: x[0])
         #print(closest_files[0][1], closest_files_header[0][1])
-        if closest_files[0][1] == closest_files_header[0][1]:
-            return closest_files[0][1]
-        else:
-            raise ValueError('Time from the file name is not reliable!')
+        # if closest_files[0][1] == closest_files_header[0][1]:
+        #     return closest_files[0][1]
+        # else:
+        #     raise ValueError('Time from the file name is not reliable!')
+        return closest_files_header[0][1]
 
     # Return just the filenames
     return closest_files[0][1]
