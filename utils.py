@@ -7,6 +7,7 @@ from datetime import datetime, timedelta
 import pkg_resources
 from astropy.coordinates import SkyCoord
 from astropy import units as u
+import pickle
 
 def time_it(func):
     def wrapper(*args, **kwargs):
@@ -127,3 +128,10 @@ def make_sub_map(cur_map, fov):
     tori = SkyCoord(fov[1][0] * u.arcsec, fov[1][1] * u.arcsec, frame=cur_map.coordinate_frame)
     sub_map = cur_map.submap(bole, top_right=tori)
     return sub_map
+
+
+def temperature_map_to_fits(dem_res_save):
+    with open(dem_res_save, 'rb') as csf:
+        dem_res = pickle.load(csf)
+    csf.close()
+
