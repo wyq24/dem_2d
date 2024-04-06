@@ -130,8 +130,29 @@ def make_sub_map(cur_map, fov):
     return sub_map
 
 
-def temperature_map_to_fits(dem_res_save):
-    with open(dem_res_save, 'rb') as csf:
-        dem_res = pickle.load(csf)
-    csf.close()
+def temperature_em_map(dem_res_save, t_range=None):
+    import numpy as np
+    if isinstance(dem_res_save, str):
+        with open(dem_res_save, 'rb') as csf:
+            dem_res = pickle.load(csf)
+        csf.close()
+    else:
+        dem_res = dem_res_save
+    mean_t = (dem_res[5][1:]+dem_res[5][0:-1])/2.0
+    if t_range is not None:
+        t_min_idx = np.nanargmin(abs(mean_t- t_range[0]))
+        t_max_idx = np.nanargmin(abs(mean_t- t_range[1]))
+    else:
+        t_min_idx, t_max_idx = (0,len(mean_t))
 
+
+    #weights_sum = np.sum(dem_res[0][:,:,t_min_idx:t_max_idx]/dem_res[1][:,:,t_min_idx:t_max_idx], axis=2)
+    #weighted_indices_sum = np.sum(dem_res[0][:,:,t_min_idx:t_max_idx]/dem_res[1][:,:,t_min_idx:t_max_idx] * mean_t[np.newaxis, np.newaxis, t_min_idx:t_max_idx], axis=2)
+    #error = dem_res[1][:,:,t_min_idx:t_max_idx]/dem_res[0][:,:,t_min_idx:t_max_idx]
+    ##todo: uncertainty on temperature: https://mingjiejian.github.io/2019/12/06/error-weighted-mean/
+    error = np.ones_like(dem_res[1][:,:,t_min_idx:t_max_idx])/dem_res[1][:,:,t_min_idx:t_max_idx]
+    weights_sum = np.sum(dem_res[0][:,:,t_min_idx:t_max_idx]*error, axis=2)
+    weighted_indices_sum = np.sum(dem_res[0][:,:,t_min_idx:t_max_idx]*error * mean_t[np.newaxis, np.newaxis, t_min_idx:t_max_idx], axis=2)
+    weighted_indices_sum_all = np.sum(dem_res[0][:, :, :] * mean_t[np.newaxis, np.newaxis, :], axis=2)
+    centroid_indices = weighted_indices_sum / weights_sum
+    return centroid_indices, weighted_indices_sum_all
