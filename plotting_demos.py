@@ -3,9 +3,10 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 #cx, cy = [82,102]
-cx, cy = [94,109]
-cfile1 = '/Users/walterwei/Downloads/work/20221029/save/DEM_2022-10-29T19:09:09.352_fov_-250_320_-150_420.p'
-cfile2 = '/Users/walterwei/Downloads/work/20221029/save/DEM_2022-10-29T18:54:57.630_fov_-250_320_-150_420.p'
+#cx, cy = [94,109]
+cx, cy = [87,104]
+cfile1 = './demo_data/DEM_2022-10-29T19:09:09.352_fov_-250_320_-150_420.p'
+cfile2 = './demo_data/DEM_2022-10-29T18:54:57.630_fov_-250_320_-150_420.p'
 
 
 with open(cfile1, 'rb') as csf1:
